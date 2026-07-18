@@ -2,6 +2,9 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import { connectDB, dbState } from './config/db';
+import { errorHandler } from './middleware/errorHandler';
+import { authRoutes } from './routes/authRoutes';
+import { transactionRoutes } from './routes/transactionRoutes';
 
 const app = express();
 
@@ -11,6 +14,11 @@ app.use(express.json());
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', db: dbState() });
 });
+
+app.use('/api/auth', authRoutes);
+app.use('/api/transactions', transactionRoutes);
+
+app.use(errorHandler);
 
 const PORT = Number(process.env.PORT) || 5000;
 
